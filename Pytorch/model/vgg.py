@@ -10,7 +10,7 @@ vggConfiguration = {
 }
 
 class vgg(nn.Module):
-    def __init__(self, vggName):
+    def __init__(self, vggName='vgg19'):
         super(vgg, self).__init__()
         self.feature = self._makeLayer(vggName)
         self.classifier = nn.Linear(in_features=4096, out_features=100)
