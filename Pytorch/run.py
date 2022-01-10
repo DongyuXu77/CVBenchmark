@@ -4,10 +4,15 @@ import torch.optim as optim
 import torchvision
 import argparse
 from model import *
+from data import dataloader
 
 bestAccuracy=[1, 0]
 def parserArgs():
     parser = argparse.ArgumentParser()
+    parser.add_argument('--dataset', type=str, default="ImageNet", help="")
+    parser.add_argument('--trainBatchsize', type=int, default=256, help="Batchsize of train")
+    parser.add_argument('--testBatchsize', type=int, default=256, help="Batchsize of test")
+    parser.add_argument('--workers', type=int, default=32, help="")
     parser.add_argument('--epoch', type=int, default=200, help="")
     config = parser.parse_args()
     config.device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -55,6 +60,10 @@ def test(model, epoch,testLoader,device):
         for batch, (inputs, labels) in enumerate(testloader):
             inputs, labels = inputs.to(device), labels.to(device)
             outputs = model(inputs)
+            _, predict = outputs.max(1)
+            correct = correct+predict.eq(labels).sum().item()
+            total = total+inputs.size(0)
+            print("[Epoch:{} batch:{}] Accuracy:{:.2f}".format(epoch+1, batch+1, correct/total))
 
 if __name__=="__main__":
     config = parserArgs()
@@ -62,9 +71,10 @@ if __name__=="__main__":
     model.to(config.device)
     if torch.cuda.device_count()>1:
         model = torch.nn.DataParallel(model)
+    tranloader, testloader = dataloader(config)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
     for epoch in config.epoch:
         train(model, epoch, trainloader, optimizer, criterion, config.device)
-        eval(model, epoch, evalloader, optimizer, config.device)
-        test(epoch)
+        # eval(model, epoch, evalloader, optimizer, config.device)
+        test(model, epoch, testloader, config.device)
