@@ -42,5 +42,6 @@ class vgg(nn.Module):
 
 if __name__=="__main__":
     model = vgg('vgg19')
-    model.to('cuda')
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    model.to(device)
     summary(model, (3, 224, 224))
