@@ -90,9 +90,9 @@ class bottlenect(nn.Module):
         return nn.Sequential(*layers)
 
 
-class ResNet(nn.Module):
+class resnet(nn.Module):
     def __init__(self, block, num_blocks, num_classes):
-        super(ResNet, self).__init__()
+        super(resnet, self).__init__()
         self.inPlanes = 64
 
         self.conv = nn.Conv2d(in_channels=3, out_channels=64, kernel_size=7, stride=2, padding=3)
@@ -125,7 +125,7 @@ class ResNet(nn.Module):
         return nn.Sequential(*layers)
 
 if __name__=="__main__":
-    resnet = ResNet(buildingblock, [3, 4, 6, 3], 1000)
+    model = resnet(buildingblock, [3, 4, 6, 3], 1000)
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    resnet.to(device)
-    summary(resnet, (3, 224, 224))
+    model.to(device)
+    summary(model, (3, 224, 224))
