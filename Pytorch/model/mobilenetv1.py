@@ -1,3 +1,6 @@
+"""
+	MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications[Google Inc.]
+"""
 import torch
 import torch.nn as nn
 import torch.nn.functional as F

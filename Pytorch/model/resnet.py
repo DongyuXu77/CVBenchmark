@@ -1,3 +1,6 @@
+"""
+	Deep Residual Learning for Image Recognition[Microsoft Research]
+"""
 import torch
 import torch.nn as nn
 import torch.nn.functional as F

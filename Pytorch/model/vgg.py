@@ -1,3 +1,6 @@
+"""
+	Very Deep Convolutional Networks for Large-Scale Image Recognition[University of Oxford]
+"""
 import torch
 import torch.nn as nn
 from torchsummary import summary
