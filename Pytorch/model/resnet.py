@@ -59,11 +59,11 @@ class buildingblock(nn.Module):
             layers.append(nn.BatchNorm2d(self.expansion*planes))
         return nn.Sequential(*layers)
 
-class bottlenect(nn.Module):
+class bottleneck(nn.Module):
     expansion = 4
 
     def __init__(self, inPlanes, planes, stride=1):
-        super(bottlenect, self).__init__()
+        super(bottleneck, self).__init__()
         self.plain = self._makeLayers(inPlanes, planes, stride)
         self.identity = self._shortcut(inPlanes, planes, stride)
 
@@ -128,7 +128,7 @@ class resnet(nn.Module):
         return nn.Sequential(*layers)
 
 if __name__=="__main__":
-    model = resnet(buildingblock, [3, 4, 6, 3], 1000)
+    model = resnet(bottleneck, [3, 8, 36, 3], 1000)
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     model.to(device)
     summary(model, (3, 224, 224))

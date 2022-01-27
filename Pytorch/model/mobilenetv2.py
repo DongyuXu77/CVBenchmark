@@ -13,17 +13,18 @@ class bottleneck(nn.Module):
 		super(bottleneck, self).__init__()
 		self.stride = stride
 		self.plain = self._makeLayer(inChannels, outChannels, stride, expansion_factor)
+		self.identity = self._shortcut(inChannels, outChannels)
 
 	def forward(self, x):
 		out = self.plain(x)
 		if self.stride==1:
-			out = out + x
+			out = out+self.identity(x)
 		out = F.relu(out)
 		return out
 
 	def _makeLayer(self, inChannels, outChannels, stride, expansion_factor):
 		layers = []
-		midChannels = expansion_factor*outChannels
+		midChannels = expansion_factor*inChannels
 		layers.append(nn.Conv2d(in_channels=inChannels, out_channels=midChannels, kernel_size=(1, 1)))
 		layers.append(nn.BatchNorm2d(midChannels))
 		layers.append(nn.ReLU6())
@@ -31,6 +32,12 @@ class bottleneck(nn.Module):
 		layers.append(nn.BatchNorm2d(midChannels))
 		layers.append(nn.ReLU6())
 		layers.append(nn.Conv2d(in_channels=midChannels, out_channels=outChannels, kernel_size=(1,1)))
+		layers.append(nn.BatchNorm2d(outChannels))
+		return nn.Sequential(*layers)
+
+	def _shortcut(self, inChannels, outChannels):
+		layers = []
+		layers.append(nn.Conv2d(in_channels=inChannels, out_channels=outChannels, kernel_size=(1, 1)))
 		layers.append(nn.BatchNorm2d(outChannels))
 		return nn.Sequential(*layers)
 
@@ -48,14 +55,17 @@ class mobilenetv2(nn.Module):
 
 	def _makeLayer(self):
 		layers = []
-		layers.append(nn.Conv2d(in_channels=3, out_channels=32, kernel_size=(3, 3), padding=1))
+		layers.append(nn.Conv2d(in_channels=3, out_channels=32, kernel_size=(3, 3), stride=2, padding=1))
 		layers.append(nn.BatchNorm2d(32))
 		inChannels = 32
 		for config in mobilenetv2Configuration:
 			if not isinstance(config, int):
 				expansion_factor, outChannels, repeat_time, stride = config
 				for l in range(repeat_time):
-					layers.append(bottleneck(inChannels, outChannels, stride, expansion_factor))
+					if l == 0:
+						layers.append(bottleneck(inChannels, outChannels, stride, expansion_factor))
+					else:
+						layers.append(bottleneck(inChannels, outChannels, 1, expansion_factor))
 					inChannels = outChannels
 			else:
 				layers.append(nn.Conv2d(in_channels=inChannels, out_channels=config, kernel_size=(1, 1)))
