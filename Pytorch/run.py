@@ -12,16 +12,16 @@ def train(model, epoch, trainLoader, optimizer, criterion, device):
     total = 0
     trainLoss = 0
     for batch, (inputs, labels) in enumerate(trainLoader):
-        optimizer.zero_grad()
-        inputs, labels = inputs.to(device), labels.to(device)
-        outputs = model(inputs)
-        _, predict = outputs.max(1)
-        correct = correct+predict.eq(labels).sum().item()
-        total = total+inputs.size(0)
-        loss = criterion(outputs, labels)
-        loss.backward()
-        optimizer.step()
-        trainLoss = trainLoss + loss.item()
+	optimizer.zero_grad()
+	inputs, labels = inputs.to(device), labels.to(device)
+	outputs = model(inputs)
+	_, predict = outputs.max(1)
+	correct = correct+predict.eq(labels).sum().item()
+	total = total+inputs.size(0)
+	loss = criterion(outputs, labels)
+	loss.backward()
+	optimizer.step()
+	trainLoss = trainLoss + loss.item()
 	if torch.cuda.current_device()==0:
 		print("[Epoch:{} batch:{}] Accuracy:{:.4f} Loss:{:.4f}".format(epoch+1, batch+1, correct/total, loss/(batch+1)))
 
