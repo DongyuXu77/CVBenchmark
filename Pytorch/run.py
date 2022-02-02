@@ -2,6 +2,7 @@ import torch
 import torchvision
 from model import *
 import torch.nn as nn
+from utils import gpu_set
 from data import dataloader
 import torch.optim as optim
 
@@ -21,7 +22,8 @@ def train(model, epoch, trainLoader, optimizer, criterion, device):
         loss.backward()
         optimizer.step()
         trainLoss = trainLoss + loss.item()
-        print("[Epoch:{} batch:{}] Accuracy:{:.4f} Loss:{:.4f}".format(epoch+1, batch+1, correct/total, loss/(batch+1)))
+	if torch.cuda.current_device()==0:
+        	print("[Epoch:{} batch:{}] Accuracy:{:.4f} Loss:{:.4f}".format(epoch+1, batch+1, correct/total, loss/(batch+1)))
 
 def eval(model, epoch, evalLoader, optimizer, device):
     model.eval()
@@ -34,7 +36,8 @@ def eval(model, epoch, evalLoader, optimizer, device):
             _, predict = outputs.max(1)
             correct = correct + predict.eq(labels).sum().item()
             total = total + inputs.size(0)
-            print("[Epoch:{} batch:{}] Accuracy:{:.4f}".format(epoch+1, batch+1, correct/total))
+	    if torch.cuda.current_device()==0:
+            	print("[Epoch:{} batch:{}] Accuracy:{:.4f}".format(epoch+1, batch+1, correct/total))
 
 def test(model, epoch,testLoader,device):
     correct = 0
@@ -47,14 +50,12 @@ def test(model, epoch,testLoader,device):
             _, predict = outputs.max(1)
             correct = correct+predict.eq(labels).sum().item()
             total = total+inputs.size(0)
-            print("[Epoch:{} batch:{}] Accuracy:{:.4f}".format(epoch+1, batch+1, correct/total))
+	    if toch.cuda.current_device()==0:
+            	print("[Epoch:{} batch:{}] Accuracy:{:.4f}".format(epoch+1, batch+1, correct/total))
 
 if __name__=="__main__":
     model = vgg()
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    model.to(device)
-    if torch.cuda.device_count()>1:
-        model = torch.nn.DataParallel(model)
+    model, device = gpu_set(model)
     tranloader, testloader = dataloader({'dataset': "ImageNet"})
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
