@@ -23,7 +23,7 @@ def train(model, epoch, trainLoader, optimizer, criterion, device):
         optimizer.step()
         trainLoss = trainLoss + loss.item()
 	if torch.cuda.current_device()==0:
-        	print("[Epoch:{} batch:{}] Accuracy:{:.4f} Loss:{:.4f}".format(epoch+1, batch+1, correct/total, loss/(batch+1)))
+		print("[Epoch:{} batch:{}] Accuracy:{:.4f} Loss:{:.4f}".format(epoch+1, batch+1, correct/total, loss/(batch+1)))
 
 def eval(model, epoch, evalLoader, optimizer, device):
     model.eval()
@@ -31,13 +31,13 @@ def eval(model, epoch, evalLoader, optimizer, device):
     total = 0
     with torch.no_grad():
         for batch, (inputs, labels) in enumerate(evalLoader):
-            inputs, labels = inputs.to(device), labels.to(device)
-            outputs = model(inputs)
-            _, predict = outputs.max(1)
-            correct = correct + predict.eq(labels).sum().item()
-            total = total + inputs.size(0)
-	    if torch.cuda.current_device()==0:
-            	print("[Epoch:{} batch:{}] Accuracy:{:.4f}".format(epoch+1, batch+1, correct/total))
+		inputs, labels = inputs.to(device), labels.to(device)
+		outputs = model(inputs)
+		_, predict = outputs.max(1)
+		correct = correct + predict.eq(labels).sum().item()
+		total = total + inputs.size(0)
+		if torch.cuda.current_device()==0:
+            		print("[Epoch:{} batch:{}] Accuracy:{:.4f}".format(epoch+1, batch+1, correct/total))
 
 def test(model, epoch,testLoader,device):
     correct = 0
@@ -45,13 +45,13 @@ def test(model, epoch,testLoader,device):
     model.eval()
     with torch.no_grad():
         for batch, (inputs, labels) in enumerate(testloader):
-            inputs, labels = inputs.to(device), labels.to(device)
-            outputs = model(inputs)
-            _, predict = outputs.max(1)
-            correct = correct+predict.eq(labels).sum().item()
-            total = total+inputs.size(0)
-	    if toch.cuda.current_device()==0:
-            	print("[Epoch:{} batch:{}] Accuracy:{:.4f}".format(epoch+1, batch+1, correct/total))
+		inputs, labels = inputs.to(device), labels.to(device)
+		outputs = model(inputs)
+		_, predict = outputs.max(1)
+		correct = correct+predict.eq(labels).sum().item()
+		total = total+inputs.size(0)
+		if toch.cuda.current_device()==0:
+		print("[Epoch:{} batch:{}] Accuracy:{:.4f}".format(epoch+1, batch+1, correct/total))
 
 if __name__=="__main__":
     model = vgg()
@@ -59,7 +59,7 @@ if __name__=="__main__":
     tranloader, testloader = dataloader({'dataset': "ImageNet"})
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
-    for epoch in config.epoch:
+    for epoch in range(200):
         train(model, epoch, trainloader, optimizer, criterion, device)
         # eval(model, epoch, evalloader, optimizer, device)
         test(model, epoch, testloader, device)
