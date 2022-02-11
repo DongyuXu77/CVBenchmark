@@ -9,4 +9,4 @@ def gpu_set(model):
 		device = torch.device("cuda", local_rank)
 		model.to(device)
 		model = DDP(model, device_ids=[local_rank], output_device=local_rank, find_unused_parameters=True)
-	return model 
+	return model, device 

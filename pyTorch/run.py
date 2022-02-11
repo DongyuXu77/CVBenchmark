@@ -55,8 +55,7 @@ def test(model, epoch,testLoader,device):
 
 if __name__=="__main__":
 	model = vgg()
-	device = torch.cuda.current_device()
-	model = gpu_set(model)
+	model, device = gpu_set(model)
 	tranloader, testloader = dataloader({'dataset': "ImageNet"})
 	criterion = nn.CrossEntropyLoss()
 	optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
