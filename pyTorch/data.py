@@ -12,7 +12,7 @@ def dataloader(config):
 		transforms.ToTensor(),
 		normalize
 		])
-       		transforms_test = transforms.Compose([
+		transforms_test = transforms.Compose([
 		transforms.ToTensor(),
 		normalize
 		])
