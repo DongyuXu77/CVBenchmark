@@ -5,7 +5,7 @@ import torch
 import torch.nn.functional as F
 import torch.nn as nn
 from torchsummary import summary
-efficientnetv1Configuration = [(3, 1, 16, 1), (3, 2, 24, 2), (5, 2, 40, 2), (3, 2, 80, 3), (5, 2, 112, 3), (5, 2, 192, 4), (3, 1, 320, 1)]	#(kernel_size, stride, out_Channels, repeat_time(stage))
+EfficientNetV1Configuration = [(3, 1, 16, 1), (3, 2, 24, 2), (5, 2, 40, 2), (3, 2, 80, 3), (5, 2, 112, 3), (5, 2, 192, 4), (3, 1, 320, 1)]	#(kernel_size, stride, out_Channels, repeat_time(stage))
 
 class bottleneck(nn.Module):
 	def __init__(self, inChannels, outChannels, kernel_size, stride):
@@ -41,9 +41,9 @@ class bottleneck(nn.Module):
 			layers.append(nn.BatchNorm2d(outChannels))
 		return nn.Sequential(*layers)
 
-class efficientnetv1(nn.Module):
+class EfficientNetV1(nn.Module):
 	def __init__(self):
-		super(efficientnetv1, self).__init__()
+		super(EfficientNetV1, self).__init__()
 		self.feature = self._makeLayer()
 		self.classifier = nn.Linear(in_features=1280, out_features=1000)
 
@@ -58,7 +58,7 @@ class efficientnetv1(nn.Module):
 		layers.append(nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3, padding=1))
 		layers.append(nn.BatchNorm2d(32))
 		inChannels = 32
-		for config in efficientnetv1Configuration:
+		for config in EfficientNetV1Configuration:
 			kernel_size, stride, outChannels, repeat_time = config
 			for l in range(repeat_time):
 				if l==0:
@@ -71,7 +71,7 @@ class efficientnetv1(nn.Module):
 		return nn.Sequential(*layers)
 
 if __name__=="__main__":
-	model = efficientnetv1()
+	model = EfficientNetV1()
 	device = 'cuda' if torch.cuda.is_available() else 'cpu'
 	model.to(device)
 	summary(model, (3, 224, 224))

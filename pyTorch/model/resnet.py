@@ -6,24 +6,24 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torchsummary import summary
 
-resnetConfiguration = {
-	'resnet18':{
+ResNetConfiguration = {
+	'ResNet18':{
 		'block': 'buildingblock',
 		'num_blocks': [2, 2, 2, 2]
 	},
-	'resnet34':{
+	'ResNet34':{
 		'block': 'buildingblock',
 		'num_blocks': [3, 4, 6, 3]
 	},
-	'resnet50':{
+	'ResNet50':{
 		'block': 'bottleneck',
 		'num_blocks': [3, 4, 6, 3]
 	},
-	'resnet101':{
+	'ResNet101':{
 		'block': 'bottleneck',
 		'num_blocks': [3, 4, 23, 3]
 	},
-	'resnet152':{
+	'ResNet152':{
 		'block': 'bottleneck',
 		'num_blocks': [3, 8, 36, 3]
 	}
@@ -93,9 +93,9 @@ class bottleneck(nn.Module):
 		return nn.Sequential(*layers)
 
 
-class resnet(nn.Module):
+class ResNet(nn.Module):
 	def __init__(self, block, num_blocks, num_classes):
-		super(resnet, self).__init__()
+		super(ResNet, self).__init__()
 		self.inPlanes = 64
 
 		self.conv = nn.Conv2d(in_channels=3, out_channels=64, kernel_size=7, stride=2, padding=3)
@@ -128,7 +128,7 @@ class resnet(nn.Module):
 		return nn.Sequential(*layers)
 
 if __name__=="__main__":
-	model = resnet(bottleneck, [3, 8, 36, 3], 1000)
+	model = ResNet(bottleneck, [3, 8, 36, 3], 1000)
 	device = 'cuda' if torch.cuda.is_available() else 'cpu'
 	model.to(device)
 	summary(model, (3, 224, 224))

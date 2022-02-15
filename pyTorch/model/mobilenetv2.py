@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torchsummary import summary
-mobilenetv2Configuration = [(1, 16, 1, 1), (6, 24, 2, 2), (6, 32, 3, 2), (6, 64, 4, 2), (6, 96, 3, 1), (6, 160, 3, 2), (6, 320, 1, 1), 1280]	#(expansion_factor, channel, repeated_time, stride)
+MobileNetV2Configuration = [(1, 16, 1, 1), (6, 24, 2, 2), (6, 32, 3, 2), (6, 64, 4, 2), (6, 96, 3, 1), (6, 160, 3, 2), (6, 320, 1, 1), 1280]	#(expansion_factor, channel, repeated_time, stride)
 
 class bottleneck(nn.Module):
 	def __init__(self, inChannels, outChannels, stride, expansion_factor):
@@ -41,9 +41,9 @@ class bottleneck(nn.Module):
 		layers.append(nn.BatchNorm2d(outChannels))
 		return nn.Sequential(*layers)
 
-class mobilenetv2(nn.Module):
+class MobileNetV2(nn.Module):
 	def __init__(self):
-		super(mobilenetv2, self).__init__()
+		super(MobileNetV2, self).__init__()
 		self.feature = self._makeLayer()
 		self.classifier = nn.Linear(in_features=1280, out_features=1000)
 
@@ -58,7 +58,7 @@ class mobilenetv2(nn.Module):
 		layers.append(nn.Conv2d(in_channels=3, out_channels=32, kernel_size=(3, 3), stride=2, padding=1))
 		layers.append(nn.BatchNorm2d(32))
 		inChannels = 32
-		for config in mobilenetv2Configuration:
+		for config in MobileNetV2Configuration:
 			if not isinstance(config, int):
 				expansion_factor, outChannels, repeat_time, stride = config
 				for l in range(repeat_time):
@@ -76,7 +76,7 @@ class mobilenetv2(nn.Module):
 	
 		
 if __name__=="__main__":
-	model = mobilenetv2()
+	model = MobileNetV2()
 	device = 'cuda' if torch.cuda.is_available() else 'cpu'
 	model = model.to(device)
 	summary(model, (3, 224, 224))

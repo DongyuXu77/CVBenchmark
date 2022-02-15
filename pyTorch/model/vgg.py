@@ -5,17 +5,17 @@ import torch
 import torch.nn as nn
 from torchsummary import summary
 
-vggConfiguration = {
-	'vgg13':[3, 3, 'M', 3, 3, 'M', 3, 3, 'M', 3, 3, 'M', 3, 3, 'M'],
-	'vgg16_Conv1':[3, 3, 'M', 3, 3, 'M', 3, 3, 1, 'M', 3, 3, 1, 'M', 3, 3, 1, 'M'],
-	'vgg16':[3, 3, 'M', 3, 3, 'M', 3, 3, 3, 'M', 3, 3, 3, 'M', 3, 3, 3, 'M'],
-	'vgg19':[3, 3, 'M', 3, 3, 'M', 3, 3, 3, 3, 'M', 3, 3, 3, 3, 'M', 3, 3, 3, 3, 'M']
+VGGConfiguration = {
+	'VGG13':[3, 3, 'M', 3, 3, 'M', 3, 3, 'M', 3, 3, 'M', 3, 3, 'M'],
+	'VGG16_Conv1':[3, 3, 'M', 3, 3, 'M', 3, 3, 1, 'M', 3, 3, 1, 'M', 3, 3, 1, 'M'],
+	'VGG16':[3, 3, 'M', 3, 3, 'M', 3, 3, 3, 'M', 3, 3, 3, 'M', 3, 3, 3, 'M'],
+	'VGG19':[3, 3, 'M', 3, 3, 'M', 3, 3, 3, 3, 'M', 3, 3, 3, 3, 'M', 3, 3, 3, 3, 'M']
 }
 
-class vgg(nn.Module):
-	def __init__(self, vggName='vgg19'):
-		super(vgg, self).__init__()
-		self.feature = self._makeLayer(vggName)
+class VGG(nn.Module):
+	def __init__(self, VGGName='vgg19'):
+		super(VGG, self).__init__()
+		self.feature = self._makeLayer(VGGName)
 		self.classifier = nn.Linear(in_features=4096, out_features=1000)
 
 	def forward(self, x):
@@ -24,11 +24,11 @@ class vgg(nn.Module):
 		x = self.classifier(x)
 		return x
 
-	def _makeLayer(self, vggName):
+	def _makeLayer(self, VGGName):
 		layers = []
 		inChannel = 3
 		outChannel = 64
-		for l in vggConfiguration[vggName]:
+		for l in VGGConfiguration[VGGName]:
 			if l=='M':
 				layers.append(nn.MaxPool2d(kernel_size=2))
 				if outChannel<512:
@@ -44,7 +44,7 @@ class vgg(nn.Module):
 		return nn.Sequential(*layers)
 
 if __name__=="__main__":
-	model = vgg('vgg19')
+	model = VGG('VGG19')
 	device = 'cuda' if torch.cuda.is_available() else 'cpu'
 	model.to(device)
 	summary(model, (3, 224, 224))
