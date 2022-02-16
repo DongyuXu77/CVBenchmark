@@ -2,8 +2,8 @@
 	EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks[Google Inc.]
 """
 import torch
-import torch.nn.functional as F
 import torch.nn as nn
+import torch.nn.functional as F
 from torchsummary import summary
 EfficientNetV1Configuration = [(3, 1, 16, 1), (3, 2, 24, 2), (5, 2, 40, 2), (3, 2, 80, 3), (5, 2, 112, 3), (5, 2, 192, 4), (3, 1, 320, 1)]	#(kernel_size, stride, out_Channels, repeat_time(stage))
 
