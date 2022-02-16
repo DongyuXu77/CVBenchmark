@@ -1,6 +1,5 @@
 # Convolutional-Neural-Network
-
-Reading the paper and building the network 
+classical CV model
 
 ---
 reference: https://github.com/solangii/CIFAR10-CIFAR100/tree/master/model
