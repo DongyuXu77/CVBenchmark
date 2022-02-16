@@ -45,10 +45,10 @@ class buildingblock(nn.Module):
 
 	def _makeLayers(self, inPlanes, planes, stride):
 		layers = []
-		layers.append(nn.Conv2d(in_channels=inPlanes, out_channels=planes, kernel_size=3, padding=1))
+		layers.append(nn.Conv2d(in_channels=inPlanes, out_channels=planes, kernel_size=3, stride=stride, padding=1))
 		layers.append(nn.BatchNorm2d(planes))
 		layers.append(nn.ReLU())
-		layers.append(nn.Conv2d(in_channels=planes, out_channels=self.expansion*planes, kernel_size=3, stride=stride, padding=1))
+		layers.append(nn.Conv2d(in_channels=Planes, out_channels=planes, kernel_size=3, padding=1))
 		layers.append(nn.BatchNorm2d(self.expansion*planes))
 		return nn.Sequential(*layers)
 
@@ -139,7 +139,7 @@ class ResNet(nn.Module):
 		return nn.Sequential(*layers)
 
 if __name__=="__main__":
-	model = ResNet(ResNetConfiguration['ResNet152'], 1000)
+	model = ResNet(ResNetConfiguration['ResNet152'])
 	device = 'cuda' if torch.cuda.is_available() else 'cpu'
 	model.to(device)
 	summary(model, (3, 224, 224))
