@@ -13,10 +13,10 @@ MobileNetV1Configuration = {
 
 
 class MobileNetV1(nn.Module):
-	def __init__(self):
+	def __init__(self, num_classes=1000):
 		super(MobileNetV1, self).__init__()
 		self.feature = self._makeLayer()
-		self.classifier = nn.Linear(in_features=int(1024*MobileNetV1Configuration['width_multipler']), out_features=1000)
+		self.classifier = nn.Linear(in_features=int(1024*MobileNetV1Configuration['width_multipler']), out_features=num_classes)
 
 	def forward(self, x):
 		x = self.feature(x)

@@ -103,10 +103,10 @@ class bottleneck(nn.Module):
 classDict = {'buildingblock':buildingblock._get_class(), 'bottleneck':bottleneck._get_class()}
 
 class ResNet(nn.Module):
-	def __init__(self, ResNetConfiguration, num_classes=1000):
+	def __init__(self, configuration=ResNetConfiguration['ResNet152'], num_classes=1000):
 		super(ResNet, self).__init__()
-		self.block = classDict[ResNetConfiguration['block']]
-		self.num_blocks = ResNetConfiguration['num_blocks']
+		self.block = classDict[configuration['block']]
+		self.num_blocks = configuration['num_blocks']
 		self.inPlanes = 64
 
 		self.conv = nn.Conv2d(in_channels=3, out_channels=64, kernel_size=7, stride=2, padding=3)
