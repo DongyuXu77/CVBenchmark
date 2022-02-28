@@ -44,7 +44,7 @@ def test(model, epoch,testLoader,device):
 	total = 0
 	model.eval()
 	with torch.no_grad():
-		for batch, (inputs, labels) in enumerate(testloader):
+		for batch, (inputs, labels) in enumerate(testLoader):
 			inputs, labels = inputs.to(device), labels.to(device)
 			outputs = model(inputs)
 			_, predict = outputs.max(1)
