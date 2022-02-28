@@ -50,13 +50,13 @@ def test(model, epoch,testLoader,device):
 			_, predict = outputs.max(1)
 			correct = correct+predict.eq(labels).sum().item()
 			total = total+inputs.size(0)
-			if toch.cuda.current_device()==0:
+			if torch.cuda.current_device()==0:
 				print("[Epoch:{} batch:{}] Accuracy:{:.4f}".format(epoch+1, batch+1, correct/total))
 
 if __name__=="__main__":
-	model = vgg()
+	model = VGG()
 	model, device = gpu_set(model)
-	tranloader, testloader = dataloader({'dataset': "ImageNet"})
+	trainloader, testloader = dataloader({'dataset': "ImageNet"})
 	criterion = nn.CrossEntropyLoss()
 	optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
 	for epoch in range(200):
