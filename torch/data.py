@@ -17,9 +17,9 @@ def dataloader(config):
 		normalize
 		])
       
-		trainSet = torchvision.datasets.ImageNet(root='./ImageNet', train=True, download=False, transform=transforms_train)	#set download=False because ImageNet is not longer accessible, and need to download manually
+		trainSet = torchvision.datasets.ImageNet(root='./ImageNet', split='train', download=False, transform=transforms_train)	#set download=False because ImageNet is not longer accessible, and need to download manually
       
-		testSet = torchvision.datasets.ImageNet(root='./ImageNet', train=False, download=False, transform=transforms_test)
+		testSet = torchvision.datasets.ImageNet(root='./ImageNet', split='val', download=False, transform=transforms_test)
       
 		tranloader = torch.utils.data.DataLoader(trainSet, batch_size=64, shuffle=True, num_workers=32)
       
