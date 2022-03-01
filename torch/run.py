@@ -1,3 +1,4 @@
+import time
 import torch
 import torchvision
 from model import *
@@ -11,6 +12,7 @@ def train(model, epoch, trainLoader, optimizer, criterion, device):
 	correct = 0
 	total = 0
 	trainLoss = 0
+	start_time = time.time()
 	for batch, (inputs, labels) in enumerate(trainLoader):
 		optimizer.zero_grad()
 		inputs, labels = inputs.to(device), labels.to(device)
@@ -22,8 +24,10 @@ def train(model, epoch, trainLoader, optimizer, criterion, device):
 		loss.backward()
 		optimizer.step()
 		trainLoss = trainLoss + loss.item()
+		if torch.cuda.current_device()==0 and batch%500==0:
+			print("[Epoch{} batch:{}] Accuracy:{:.4f} avg_Loss:{:.4f}".format(epoch+1, batch+1, correct/total, trainLoss/(batch+1)))
 	if torch.cuda.current_device()==0:
-		print("[Epoch:{}] Accuracy:{:.4f}".format(epoch+1, correct/total))
+		print("[Epoch:{}] Accuracy:{:.4f} Duration:{}".format(epoch+1, correct/total, time.time()-start_time))
 
 def eval(model, epoch, evalLoader, optimizer, device):
 	model.eval()
@@ -43,6 +47,7 @@ def test(model, epoch, testLoader, device):
 	correct = 0
 	total = 0
 	model.eval()
+	start_time = time.time()
 	with torch.no_grad():
 		for batch, (inputs, labels) in enumerate(testLoader):
 			inputs, labels = inputs.to(device), labels.to(device)
@@ -50,8 +55,10 @@ def test(model, epoch, testLoader, device):
 			_, predict = outputs.max(1)
 			correct = correct+predict.eq(labels).sum().item()
 			total = total+inputs.size(0)
+			if torch.cuda.current_device()==0 and batch%500==0:
+				print("[Epoch:{} Batch:{}] Accuracy:{:.4f}".format(epoch+1, batch+1, correct/total))
 		if torch.cuda.current_device()==0:
-			print("[Epoch:{}] Accuracy:{:.4f}".format(epoch+1, correct/total))
+			print("[Epoch:{}] Accuracy:{:.4f} Duration:{}".format(epoch+1, correct/total, time.time()-start_time))
 
 if __name__=="__main__":
 	model = VGG()
