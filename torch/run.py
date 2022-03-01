@@ -27,7 +27,7 @@ def train(model, epoch, trainLoader, optimizer, criterion, device):
 		if torch.cuda.current_device()==0 and batch%500==0:
 			print("[Epoch{} batch:{}] Accuracy:{:.4f} avg_Loss:{:.4f}".format(epoch+1, batch+1, correct/total, trainLoss/(batch+1)))
 	if torch.cuda.current_device()==0:
-		print("[Epoch:{}] Accuracy:{:.4f} Duration:{:.1f}s".format(epoch+1, correct/total, time.time()-start_time))
+		print("[Train Epoch:{}] Accuracy:{:.4f} Duration:{:.1f}s".format(epoch+1, correct/total, time.time()-start_time))
 
 def eval(model, epoch, evalLoader, optimizer, device):
 	model.eval()
@@ -41,7 +41,7 @@ def eval(model, epoch, evalLoader, optimizer, device):
 			correct = correct + predict.eq(labels).sum().item()
 			total = total + inputs.size(0)
 		if torch.cuda.current_device()==0:
-            		print("[Epoch:{}] Accuracy:{:.4f}".format(epoch+1, correct/total))
+            		print("[Eval Epoch:{}] Accuracy:{:.4f}".format(epoch+1, correct/total))
 
 def test(model, epoch, testLoader, device):
 	correct = 0
@@ -56,7 +56,7 @@ def test(model, epoch, testLoader, device):
 			correct = correct+predict.eq(labels).sum().item()
 			total = total+inputs.size(0)
 		if torch.cuda.current_device()==0:
-			print("[Epoch:{}] Accuracy:{:.4f} Duration:{:.1f}s".format(epoch+1, correct/total, time.time()-start_time))
+			print("[Test Epoch:{}] Accuracy:{:.4f} Duration:{:.1f}s".format(epoch+1, correct/total, time.time()-start_time))
 		if correct/total>best_acc:
 			best_acc = correct/total
 			save(device=device)
@@ -78,7 +78,7 @@ def load(path='./save_weights/best_ckpt.pth', device='cuda'):
 if __name__=="__main__":
 	model = VGG()
 	model, device, is_distributed = gpu_set(model)
-	trainsampler, trainloader, testsampler, testloader = dataloader({'dataset': "ImageNet", 'is_distributed':is_distributed})
+	trainsampler, trainloader, testsampler, testloader = dataloader({'dataset':"ImageNet", 'is_distributed':is_distributed})
 	criterion = nn.CrossEntropyLoss()
 	optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
 	best_acc = 0

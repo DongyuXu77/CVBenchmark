@@ -103,8 +103,9 @@ class bottleneck(nn.Module):
 classDict = {'buildingblock':buildingblock._get_class(), 'bottleneck':bottleneck._get_class()}
 
 class ResNet(nn.Module):
-	def __init__(self, configuration=ResNetConfiguration['ResNet152'], num_classes=1000):
+	def __init__(self, ResNetName='ResNet152', num_classes=1000):
 		super(ResNet, self).__init__()
+		configuration = ResNetConfiguration[ResNetName]
 		self.block = classDict[configuration['block']]
 		self.num_blocks = configuration['num_blocks']
 		self.inPlanes = 64
@@ -139,7 +140,7 @@ class ResNet(nn.Module):
 		return nn.Sequential(*layers)
 
 if __name__=="__main__":
-	model = ResNet(ResNetConfiguration['ResNet152'])
+	model = ResNet()
 	device = 'cuda' if torch.cuda.is_available() else 'cpu'
 	model.to(device)
 	summary(model, (3, 224, 224))

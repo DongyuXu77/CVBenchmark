@@ -40,6 +40,7 @@ class VGG(nn.Module):
 		inFeatures = 25088 # 7*7*512
 		for l in range(2):
 			layers.append(nn.Linear(in_features=inFeatures, out_features=4096))
+			layers.append(nn.Dropout(0.5))
 			inFeatures = 4096
 		return nn.Sequential(*layers)
 

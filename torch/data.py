@@ -1,6 +1,6 @@
 import torch
 import torchvision
-from torchvision import datasets, transforms
+from torchvision import transforms
 
 def dataloader(config):
 	if config['dataset'] == 'ImageNet':
