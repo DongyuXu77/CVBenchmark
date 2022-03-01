@@ -48,7 +48,7 @@ class buildingblock(nn.Module):
 		layers.append(nn.Conv2d(in_channels=inPlanes, out_channels=planes, kernel_size=3, stride=stride, padding=1))
 		layers.append(nn.BatchNorm2d(planes))
 		layers.append(nn.ReLU())
-		layers.append(nn.Conv2d(in_channels=Planes, out_channels=planes, kernel_size=3, padding=1))
+		layers.append(nn.Conv2d(in_channels=planes, out_channels=planes, kernel_size=3, padding=1))
 		layers.append(nn.BatchNorm2d(self.expansion*planes))
 		return nn.Sequential(*layers)
 
