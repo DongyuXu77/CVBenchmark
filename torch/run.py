@@ -1,11 +1,13 @@
+import os
 import time
 import torch
-import torchvision
 from model import *
 import torch.nn as nn
 from utils import gpu_set
 from data import dataloader
 import torch.optim as optim
+
+best_acc = 0
 
 def train(model, epoch, trainLoader, optimizer, criterion, device):
 	model.train()
@@ -60,10 +62,10 @@ def test(model, epoch, testLoader, device):
 			save(device=device)
 
 def save(path='./save_weights/best_ckpt.pth', device='cuda'):
-	if os.path.exists(os.path.dirname((path))==False:
+	if os.path.exists(os.path.dirname(path))==False:
 		os.makedirs(os.path.dirname(path))
 	model = model if device=='cpu' else model.module
-	torch.save(mode.state_dict(), path)
+	torch.save(model.state_dict(), path)
 
 def load(path='./save_weights/best_ckpt.pth', device='cuda'):
 	if os.path.exists(path):
@@ -71,7 +73,7 @@ def load(path='./save_weights/best_ckpt.pth', device='cuda'):
 		model = model if device=='cpu' else model.module
 		model.load_state_dict(weights_dict)
 	else:
-		raise ValError('weightFile does not exists')
+		raise ValueError('weightFile does not exists')
 
 if __name__=="__main__":
 	model = VGG()
@@ -79,7 +81,6 @@ if __name__=="__main__":
 	trainsampler, trainloader, testsampler, testloader = dataloader({'dataset':"ImageNet", 'is_distributed':is_distributed})
 	criterion = nn.CrossEntropyLoss()
 	optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
-	best_acc = 0
 	for epoch in range(200):
 		if is_distributed:
 			trainsampler.set_epoch(epoch)
