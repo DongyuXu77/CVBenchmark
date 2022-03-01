@@ -27,7 +27,7 @@ def train(model, epoch, trainLoader, optimizer, criterion, device):
 		if torch.cuda.current_device()==0 and batch%500==0:
 			print("[Epoch{} batch:{}] Accuracy:{:.4f} avg_Loss:{:.4f}".format(epoch+1, batch+1, correct/total, trainLoss/(batch+1)))
 	if torch.cuda.current_device()==0:
-		print("[Epoch:{}] Accuracy:{:.4f} Duration:{}".format(epoch+1, correct/total, time.time()-start_time))
+		print("[Epoch:{}] Accuracy:{:.4f} Duration:{:.1f}s".format(epoch+1, correct/total, time.time()-start_time))
 
 def eval(model, epoch, evalLoader, optimizer, device):
 	model.eval()
@@ -55,18 +55,19 @@ def test(model, epoch, testLoader, device):
 			_, predict = outputs.max(1)
 			correct = correct+predict.eq(labels).sum().item()
 			total = total+inputs.size(0)
-			if torch.cuda.current_device()==0 and batch%500==0:
-				print("[Epoch:{} Batch:{}] Accuracy:{:.4f}".format(epoch+1, batch+1, correct/total))
 		if torch.cuda.current_device()==0:
-			print("[Epoch:{}] Accuracy:{:.4f} Duration:{}".format(epoch+1, correct/total, time.time()-start_time))
+			print("[Epoch:{}] Accuracy:{:.4f} Duration:{:.1f}s".format(epoch+1, correct/total, time.time()-start_time))
 
 if __name__=="__main__":
 	model = VGG()
-	model, device = gpu_set(model)
-	trainloader, testloader = dataloader({'dataset': "ImageNet"})
+	model, device, is_distributed = gpu_set(model)
+	trainsampler, trainloader, testsampler, testloader = dataloader({'dataset': "ImageNet", 'is_distributed':is_distributed})
 	criterion = nn.CrossEntropyLoss()
 	optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
 	for epoch in range(200):
+		if is_distributed:
+			trainsampler.set_epoch(epoch)
+			testsampler.set_epoch(epcoh)
 		train(model, epoch, trainloader, optimizer, criterion, device)
 		# eval(model, epoch, evalloader, optimizer, device)
 		test(model, epoch, testloader, device)
