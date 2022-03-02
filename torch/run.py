@@ -59,15 +59,15 @@ def test(model, epoch, testLoader, device):
 			print("[Test Epoch:{}] Accuracy:{:.4f} Duration:{:.1f}s".format(epoch+1, correct/total, time.time()-start_time))
 		if correct/total>best_acc:
 			best_acc = correct/total
-			save(device=device)
+			save(model=model, device=device)
 
-def save(path='./save_weights/best_ckpt.pth', device='cuda'):
+def save(model, path='./save_weights/best_ckpt.pth', device='cuda'):
 	if os.path.exists(os.path.dirname(path))==False:
 		os.makedirs(os.path.dirname(path))
 	model = model if device=='cpu' else model.module
 	torch.save(model.state_dict(), path)
 
-def load(path='./save_weights/best_ckpt.pth', device='cuda'):
+def load(model, path='./save_weights/best_ckpt.pth', device='cuda'):
 	if os.path.exists(path):
 		weights_dict = torch.load(path)
 		model = model if device=='cpu' else model.module
