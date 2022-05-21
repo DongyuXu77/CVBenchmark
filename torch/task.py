@@ -24,6 +24,9 @@ class trial:
     def get_criterion(self, criterionDcit):
         pass
 
+    def update_metrics(self):
+        pass
+
 	def train(self):
         self.model.train()
 		for epoch in range (epochs):
@@ -37,6 +40,7 @@ class trial:
         self.optimizer.zero_grad()
         output = self.model(data)
         loss = self.criterion(output, label)
+        self.update_metrics()
         if mode=='Train':
             loss.backward()
             self.optimizer.step()
