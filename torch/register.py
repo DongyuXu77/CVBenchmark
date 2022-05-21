@@ -1,16 +1,16 @@
 class registy:
     __instance = dict()
-    def __new__(cls, *args):
-        if args[0].lower() not in cls.__instance:
-            cls.__instance[args[0].lower()] = object.__new__(cls)
-        return cls.__instance[args[0].lower()]
+    def __new__(cls, registerName: str):
+        if registerName.lower() not in cls.__instance:
+            cls.__instance[registerName.lower()] = object.__new__(cls)
+        return cls.__instance[registerName.lower()]
 
-    def __init__(self, introduction, *args):
-        self.introduction = introduction
+    def __init__(self, registerName: str):
+        self.registName = registerName.lower()
         self.__moduleDict = dict()
 
     def __str__(self):
-        return self.introduction
+        return self.registerName
 
     def register(self, cls):
         moduleName = cls.__name__
