@@ -2,14 +2,29 @@ import torch
 
 class trial:
 	def __init__(self, configDict):
-		self.metrics = self.get_metrics(configDict['metircs'])
+		self.metrics = self.get_metrics()
 		self.model = self.get_model(configDict['model'])
 		self.optimizer = self.get_optimizer(configDict['optimzier'])
-		self.lr_schedule = self.get_lr_schedule(configDict['lr_shcedule'])
+		self.lr_schedule = self.get_lrSchedule(configDict['lr_shcedule'])
 		self.criterion = self.get_criterion(configDict['criterion'])
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-	def train():
+    def get_metrics(self):
+        pass
+
+    def get_model(self):
+        pass
+    
+    def get_optimizer(self, optimDict):
+        pass
+
+    def get_lrSchedule(self, lrDict):
+        pass
+
+    def get_criterion(self, criterionDcit):
+        pass
+
+	def train(self):
         self.model.train()
 		for epoch in range (epochs):
 			self.initialize_metrics()
