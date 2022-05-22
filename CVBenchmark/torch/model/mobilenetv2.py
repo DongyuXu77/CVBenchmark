@@ -6,6 +6,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torchsummary import summary
+from CVBenchmark.torch.register import modelRegister
 MobileNetV2Configuration = [(1, 16, 1, 1), (6, 24, 2, 2), (6, 32, 3, 2), (6, 64, 4, 2), (6, 96, 3, 1), (6, 160, 3, 2), (6, 320, 1, 1), 1280]	#(expansion_factor, channel, repeated_time, stride)
 
 class bottleneck(nn.Module):

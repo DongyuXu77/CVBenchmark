@@ -5,6 +5,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torchsummary import summary
+from CVBenchmark.torch.register import modelRegister
 MobileNetV1Configuration = {
 	'layers' : [64, (128, 2), 128, (256, 2), 256, (512, 2), 512, 512, 512, 512, 512, (1024, 2), 1024],
 	'width_multipler' : 0.75, #one of 0.25/0.75/1
