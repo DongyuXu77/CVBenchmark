@@ -4,6 +4,7 @@
 import torch
 import torch.nn as nn
 from torchsummary import summary
+from CVBenchmark.torch.register import modelRegister
 
 VGGConfiguration = {
 	'VGG13':[3, 3, 'M', 3, 3, 'M', 3, 3, 'M', 3, 3, 'M', 3, 3, 'M'],
@@ -12,6 +13,7 @@ VGGConfiguration = {
 	'VGG19':[3, 3, 'M', 3, 3, 'M', 3, 3, 3, 3, 'M', 3, 3, 3, 3, 'M', 3, 3, 3, 3, 'M']
 }
 
+@modelRegister.register
 class VGG(nn.Module):
 	def __init__(self, VGGName='VGG19', num_classes=1000):
 		super(VGG, self).__init__()
@@ -45,7 +47,7 @@ class VGG(nn.Module):
 		return nn.Sequential(*layers)
 
 if __name__=="__main__":
-	model = VGG('VGG19')
-	device = 'cuda' if torch.cuda.is_available() else 'cpu'
-	model.to(device)
-	summary(model, (3, 224, 224))
+    model = VGG('VGG19')
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    model.to(device)
+    summary(model, (3, 224, 224))
