@@ -103,6 +103,7 @@ class bottleneck(nn.Module):
 
 classDict = {'buildingblock':buildingblock._get_class(), 'bottleneck':bottleneck._get_class()}
 
+@modelRegister.register
 class ResNet(nn.Module):
 	def __init__(self, ResNetName='ResNet152', num_classes=1000):
 		super(ResNet, self).__init__()

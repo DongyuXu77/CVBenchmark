@@ -12,7 +12,7 @@ MobileNetV1Configuration = {
 	'resolution_multiplier' : 1#one of 0.7414/1
 }
 
-
+@modelRegister.register
 class MobileNetV1(nn.Module):
 	def __init__(self, num_classes=1000):
 		super(MobileNetV1, self).__init__()

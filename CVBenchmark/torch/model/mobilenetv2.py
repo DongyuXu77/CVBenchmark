@@ -42,6 +42,7 @@ class bottleneck(nn.Module):
 		layers.append(nn.BatchNorm2d(outChannels))
 		return nn.Sequential(*layers)
 
+@modelRegister.register
 class MobileNetV2(nn.Module):
 	def __init__(self, num_classes=1000):
 		super(MobileNetV2, self).__init__()
